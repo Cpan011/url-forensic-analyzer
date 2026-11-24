@@ -16,7 +16,6 @@ from analyzer.scoring import BENIGN_MAX, SUSPICIOUS_MAX, TOOL_NAME, TOOL_VERSION
 
 st.set_page_config(page_title="URL Forensic Analyzer", layout="centered")
 
-RED, AMBER, GREEN = "#B42318", "#9A6700", "#1A7F37"
 
 HEADLINE = {
     "Phishing": "Phishing",
@@ -33,10 +32,10 @@ st.markdown("""
 <style>
 [data-testid="stDecoration"] {display: none;}
 h1 {font-size: 1.7rem !important; font-weight: 600 !important;}
-.result {border: 1px solid #D1D9E0; border-top: 4px solid var(--c); border-radius: 6px;
+.result {border: 1px solid #D1D9E0; border-top: 4px solid #16A34A; border-radius: 6px;
          padding: 16px 20px 4px; margin: 4px 0 20px; background: #FFFFFF;}
 .result .kicker {font-size: .8rem; color: #59636E; margin: 0;}
-.result .verdict {font-size: 1.6rem; font-weight: 600; color: var(--c); margin: 2px 0 4px; line-height: 1.25;}
+.result .verdict {font-size: 1.6rem; font-weight: 600; color: #16A34A !important; margin: 2px 0 4px; line-height: 1.25;}
 .result .desc {margin: 0 0 14px; color: #1F2328;}
 .result .row {display: grid; grid-template-columns: 34% 1fr; gap: 12px; padding: 7px 0;
               border-top: 1px solid #EAEEF2; font-size: .92rem;}
@@ -44,9 +43,14 @@ h1 {font-size: 1.7rem !important; font-weight: 600 !important;}
 .result .row .v {color: #1F2328; overflow-wrap: anywhere;}
 .result .mono {font-family: ui-monospace, Consolas, monospace; font-size: .85rem;}
 .result .note {font-size: .85rem; color: #59636E; margin: 10px 0 12px;}
-.result h4 {font-size: .95rem; font-weight: 600; margin: 14px 0 4px; padding: 0;}
+.result h4 {font-size: .95rem; font-weight: 600; margin: 14px 0 4px; padding: 0; color: #1F2328 !important;}
 .result ul {margin: 0 0 14px; padding-left: 1.1rem; font-size: .92rem;}
-.result li {margin: 3px 0;}
+.result li {margin: 3px 0; color: #1F2328 !important;}
+/* Card colours: green = no threat, bright red = suspicious or malicious */
+.result.safe {border-top-color: #16A34A;}
+.result.safe .verdict {color: #16A34A !important;}
+.result.threat {border-top-color: #E5251B;}
+.result.threat .verdict {color: #E5251B !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,9 +68,10 @@ def _row(label: str, value: str, mono: bool = False) -> str:
 
 
 def _colour(threat_type: str, verdict: str) -> str:
+    """CSS class for the result card: 'safe' (green) or 'threat' (bright red)."""
     if threat_type == "No threat detected":
-        return GREEN
-    return RED if verdict == "Malicious" else AMBER
+        return "safe"
+    return "threat"     # Suspicious or Malicious
 
 
 def _domain_age(vectors: dict) -> str:
@@ -218,7 +223,7 @@ if record:
     note_html = "".join(f'<p class="note">{escape(n)}</p>' for n in notes)
 
     st.markdown(
-        f'<div class="result" style="--c:{colour}">'
+        f'<div class="result {colour}">'
         f'<p class="kicker">Result</p>'
         f'<p class="verdict">{escape(HEADLINE[cls["threat_type"]])}</p>'
         f'<p class="desc">{escape(description)}</p>'
