@@ -130,6 +130,54 @@ def _rows_for(block: dict) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# ---------------------------------------------------------------- Dark mode
+# Extra CSS layered on top of the light theme in .streamlit/config.toml when the
+# "Dark mode" switch is on. Each visitor has their own switch.
+DARK_CSS = """
+<style>
+[data-testid="stApp"], [data-testid="stHeader"], [data-testid="stBottomBlockContainer"]
+    {background: #0E1117 !important; color: #E6EDF3;}
+[data-testid="stApp"] h1, [data-testid="stApp"] h2, [data-testid="stApp"] h3,
+[data-testid="stApp"] p, [data-testid="stApp"] label, [data-testid="stApp"] li,
+[data-testid="stApp"] summary, [data-testid="stApp"] summary span,
+[data-testid="stWidgetLabel"] p, [data-testid="stMarkdownContainer"] {color: #E6EDF3;}
+[data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p {color: #8B949E !important;}
+[data-baseweb="input"], [data-baseweb="input"] > div, [data-baseweb="input"] input,
+[data-baseweb="base-input"] {background: #161B22 !important; color: #E6EDF3 !important;
+    border-color: #30363D !important;}
+[data-baseweb="input"] input::placeholder {color: #6E7681 !important;}
+[data-testid="stExpander"] details {background: #161B22; border-color: #30363D;}
+[data-testid="stExpander"] summary:hover {background: #1C2128;}
+[data-testid="stBaseButton-secondary"] {background: #21262D !important; color: #E6EDF3 !important;
+    border-color: #30363D !important;}
+[data-testid="stBaseButton-secondary"]:hover {border-color: #8B949E !important;}
+[data-baseweb="tab-list"] button p {color: #8B949E;}
+[data-baseweb="tab-list"] button[aria-selected="true"] p {color: #E6EDF3;}
+[data-baseweb="tab-border"] {background: #30363D !important;}
+[data-testid="stCode"] pre, [data-testid="stCode"] code {background: #161B22 !important;
+    color: #E6EDF3 !important;}
+[data-testid="stJson"] {background: #161B22 !important; filter: invert(0.88) hue-rotate(180deg);}
+[data-testid="stDataFrame"], [data-testid="stTable"] {filter: invert(0.9) hue-rotate(180deg);}
+[data-testid="stStatusWidget"], [data-testid="stExpanderDetails"] {color: #E6EDF3;}
+[data-testid="stCheckbox"] span {border-color: #6E7681;}
+/* Result card */
+.result {background: #161B22 !important; border-color: #30363D !important;}
+.result .kicker, .result .row .k, .result .note {color: #8B949E !important;}
+.result .desc, .result .row .v, .result h4, .result li {color: #E6EDF3 !important;}
+.result .row {border-top-color: #30363D !important;}
+.result.safe {border-top-color: #3FB950 !important;}
+.result.safe .verdict {color: #3FB950 !important;}
+.result.threat {border-top-color: #FF4D4D !important;}
+.result.threat .verdict {color: #FF4D4D !important;}
+</style>
+"""
+
+_, toggle_col = st.columns([3, 1])
+dark_mode = toggle_col.toggle("Dark mode", value=True, key="dark_mode")
+if dark_mode:
+    st.markdown(DARK_CSS, unsafe_allow_html=True)
+
+
 if "history" not in st.session_state:
     st.session_state.history = []
 if "case_ref" not in st.session_state:
