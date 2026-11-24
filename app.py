@@ -1,9 +1,3 @@
-"""Phishing and Malicious URL Forensic Analyzer - web interface.
-
-Run in VS Code with F5, or in the terminal:
-    python -m streamlit run app.py
-"""
-
 import json
 from datetime import datetime
 from html import escape
