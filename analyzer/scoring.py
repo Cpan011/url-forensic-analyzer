@@ -37,7 +37,7 @@ def score(results: list) -> dict:
     if malicious_hits >= 3 and verdict != "Malicious":
         verdict, total = "Malicious", max(total, SUSPICIOUS_MAX + 1)
         override = f"Raised to Malicious: {malicious_hits} VirusTotal security vendors flag this URL."
-    elif malicious_hits >= 1 and verdict == "Benign":
+    elif malicious_hits >= 2 and verdict == "Benign":
         verdict, total = "Suspicious", max(total, BENIGN_MAX + 1)
         override = f"Raised to Suspicious: {malicious_hits} VirusTotal security vendor(s) flag this URL."
 
