@@ -33,7 +33,7 @@ def _score_stats(stats: dict, findings: list):
             f"{malicious} security vendors classify this URL as malicious.", 45, VECTOR))
     elif malicious == 1:
         findings.append(finding("Flagged malicious by one engine",
-            "1 security vendor classifies this URL as malicious. Treat as risky until checked.", 30, VECTOR))
+            "1 security vendor classifies this URL as malicious. A single detection is often a false positive.", 15, VECTOR))
     if suspicious:
         findings.append(finding("Flagged suspicious",
             f"{suspicious} vendor(s) mark this URL as suspicious.", min(10 * suspicious, 20), VECTOR))
